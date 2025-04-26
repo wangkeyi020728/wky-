@@ -1,0 +1,305 @@
+/* 属性面板 */
+.attribute-panel { 
+    position: fixed; 
+    right: 20px; 
+    top: 80px; 
+    width: 320px; 
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+    border-radius: 8px; 
+    padding: 20px; 
+    z-index: 1000; 
+    display: none; 
+}
+
+.attribute-panel.active { 
+    display: block; 
+    animation: slideIn 0.3s ease; 
+}
+
+.attr-item { 
+    margin: 15px 0; 
+}
+
+.attr-item label { 
+    display: block; 
+    color: #666; 
+    font-size: 14px; 
+    margin-bottom: 4px; 
+}
+
+.attr-item input, 
+.attr-item select { 
+    width: 100%; 
+    padding: 8px; 
+    border: 1px solid #ddd; 
+    border-radius: 4px; 
+    font-size: 14px; 
+}
+
+#route-controls { 
+    border-top: 1px solid #eee; 
+    padding-top: 15px; 
+    margin-top: 15px; 
+}
+
+/* 要素属性表 */
+.feature-table {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 600px;
+    max-height: 300px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 900;
+    display: none;
+    resize: both;
+    overflow: auto;
+    min-width: 400px;
+    min-height: 200px;
+}
+
+.feature-table.active {
+    display: block;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #eee;
+    cursor: move; /* 指示可拖动 */
+}
+
+.table-controls {
+    display: flex;
+    align-items: center;
+}
+
+.drag-handle {
+    cursor: move;
+    margin: 0 10px;
+    color: #666;
+    font-weight: bold;
+}
+
+#searchInput {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 180px;
+}
+
+/* 表格样式保持不变 */
+#featureTable {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-y: auto;
+    max-height: 250px;
+}
+
+#featureTable th, 
+#featureTable td {
+    padding: 10px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+#featureTable th {
+    background: #f7f7f7;
+    font-weight: 500;
+    position: sticky;
+    top: 0;
+}
+
+#featureTable tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 220px;
+}
+
+#featureTable thead, 
+#featureTable tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#featureTable tbody tr:hover {
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+/* 滚动条样式 */
+#featureTable tbody::-webkit-scrollbar {
+    width: 6px;
+}
+
+#featureTable tbody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#featureTable tbody::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+#featureTable tbody::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* 空状态提示 */
+.empty-state {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
+/* 高亮选中行 */
+#featureTable tr.selected {
+    background-color: #e6f7ff;
+    border-left: 3px solid #1890ff;
+}
+
+/* 状态标签 */
+.status-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: white;
+}
+
+.status-tag.ready {
+    background-color: #52c41a;
+}
+
+.status-tag.busy {
+    background-color: #faad14;
+}
+
+.status-tag.emergency {
+    background-color: #f5222d;
+}
+
+/* 路线规划面板样式 */
+#route-panel {
+    position: absolute;
+    width: 300px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: move;
+}
+
+.panel-controls {
+    display: flex;
+    align-items: center;
+}
+
+.drag-handle {
+    cursor: grab;
+    margin-right: 10px;
+    user-select: none;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+/* 确保面板可拖动 */
+.panel {
+    user-select: none;
+}
+
+#route-panel .panel-header {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#route-panel .panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+#route-panel .panel-body {
+    padding: 15px;
+}
+
+#route-panel .form-group {
+    margin-bottom: 15px;
+}
+
+#route-panel label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#route-panel select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#route-panel button {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#route-panel .primary-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#route-panel .danger-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.attribute-panel {
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 15px;
+    z-index: 1000;
+    display: none; /* 默认隐藏 */
+}
+
+.attribute-panel.active {
+    display: block; /* 激活时显示 */
+}

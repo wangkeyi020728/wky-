@@ -1,0 +1,159 @@
+{
+  "mapCenter": {
+    "lng": 104.18916972888154,
+    "lat": 30.630006665598493
+  },
+  "mapZoom": 15,
+  "features": {
+    "point": [
+      {
+        "type": "point",
+        "name": "通用点 1",
+        "coordinates": {
+          "lng": 104.19437990083941,
+          "lat": 30.665798142489628
+        },
+        "properties": {},
+        "createTime": "2025-03-20T09:04:01.892Z"
+      }
+    ],
+    "hydrant": [
+      {
+        "type": "hydrant",
+        "name": "消防栓 1",
+        "coordinates": {
+          "lng": 104.17231751751436,
+          "lat": 30.65877760576239
+        },
+        "properties": {
+          "pressure": "正常"
+        },
+        "createTime": "2025-03-20T09:04:05.708Z"
+      }
+    ],
+    "water": [
+      {
+        "type": "water",
+        "name": "水源点 1",
+        "coordinates": {
+          "lng": 104.16441242902654,
+          "lat": 30.649581787420637
+        },
+        "properties": {
+          "capacity": "1000m³"
+        },
+        "createTime": "2025-03-20T09:04:08.364Z"
+      }
+    ],
+    "firetruck": [
+      {
+        "type": "firetruck",
+        "name": "消防车 1",
+        "coordinates": {
+          "lng": 104.19531413856978,
+          "lat": 30.641317224033404
+        },
+        "properties": {
+          "status": "待命",
+          "capacity": "10吨"
+        },
+        "createTime": "2025-03-20T09:04:10.595Z"
+      }
+    ],
+    "firepoint": [
+      {
+        "type": "firepoint",
+        "name": "着火点 1",
+        "coordinates": {
+          "lng": 104.19502668080659,
+          "lat": 30.646412753456687
+        },
+        "properties": {
+          "level": "一级",
+          "fireTime": "2025-03-20T09:04:12.766Z"
+        },
+        "createTime": "2025-03-20T09:04:12.766Z"
+      }
+    ],
+    "polyline": [
+      {
+        "type": "polyline",
+        "name": "未命名路线",
+        "coordinates": [
+          {
+            "lng": 104.15931005372987,
+            "lat": 30.632119728510023
+          },
+          {
+            "lng": 104.19172091652987,
+            "lat": 30.629695917121747
+          },
+          {
+            "lng": 104.19818871620171,
+            "lat": 30.6320575802661
+          },
+          {
+            "lng": 104.21019007781503,
+            "lat": 30.65747284748833
+          }
+        ],
+        "style": {
+          "strokeColor": "#1890ff",
+          "strokeWeight": 2,
+          "strokeOpacity": 1
+        },
+        "createTime": "2025-03-20T09:04:26.564Z"
+      }
+    ],
+    "circle": [
+      {
+        "type": "circle",
+        "name": "未命名圆形",
+        "center": {
+          "lng": 104.17526395958708,
+          "lat": 30.662816030529132
+        },
+        "radius": 3052.994760712315,
+        "style": {
+          "strokeColor": "#FFA500",
+          "fillColor": "#FFA50030",
+          "strokeWeight": 2,
+          "strokeOpacity": 1
+        },
+        "createTime": "2025-03-20T09:04:23.732Z"
+      }
+    ],
+    "rectangle": [
+      {
+        "type": "rectangle",
+        "name": "未命名矩形",
+        "coordinates": [
+          {
+            "lng": 104.16865243103365,
+            "lat": 30.627831405095247
+          },
+          {
+            "lng": 104.1987636317281,
+            "lat": 30.627831405095247
+          },
+          {
+            "lng": 104.1987636317281,
+            "lat": 30.61602198639239
+          },
+          {
+            "lng": 104.16865243103365,
+            "lat": 30.61602198639239
+          }
+        ],
+        "style": {
+          "strokeColor": "#800080",
+          "fillColor": "#80008030",
+          "strokeWeight": 2,
+          "strokeOpacity": 1
+        },
+        "createTime": "2025-03-20T09:04:35.884Z"
+      }
+    ],
+    "image": []
+  }
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>消防应急专题地图系统</title>
+    <!-- 修改百度地图API引用，添加驾车路线规划服务 -->
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=JZaD3oSRkNJlhbfuG4C8BNpN7QvsNq1k&services=DRIVING_ROUTE"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components/panel.css">
+    <link rel="stylesheet" href="css/components/toolbar.css">
+    <link rel="stylesheet" href="css/components/auth.css">
+    <link rel="stylesheet" href="css/components/modal.css">
+</head>
+<body>
+    <!-- 新的顶部搜索栏 -->
+    <div class="top-search-bar">
+        <button id="menu-toggle" class="menu-toggle-btn">☰</button>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="搜索位置...">
+            <button id="search-btn" class="search-btn">🔍</button>
+        </div>
+    </div>
+
+    <!-- 侧边工具栏，默认隐藏 -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>消防应急专题地图</h3>
+            <span class="close-sidebar" onclick="toggleSidebar(false)">×</span>
+        </div>
+        
+        <div class="tool-group">
+            <div class="group-title">标注工具</div>
+            <button class="tool-btn" data-tool="point" onclick="setActiveTool('point')">📍 通用点</button>
+            <button class="tool-btn" data-tool="image" onclick="uploadCustomImage()">🖼️ 图片标注</button>
+            <button class="tool-btn" data-tool="hydrant" onclick="setActiveTool('hydrant')">🚒 消防栓</button>
+            <button class="tool-btn" data-tool="water" onclick="setActiveTool('water')">🚰 水源点</button>
+            <button class="tool-btn" data-tool="firetruck" onclick="setActiveTool('firetruck')">🚚 消防车</button>
+            <button class="tool-btn" data-tool="firepoint" onclick="setActiveTool('firepoint')">🔥 着火点</button>
+        </div>
+        
+        <div class="tool-group">
+            <div class="group-title">绘图工具</div>
+            <button class="tool-btn" data-tool="polyline" onclick="setActiveTool('polyline')">📏 折线</button>
+            <button class="tool-btn" data-tool="circle" onclick="setActiveTool('circle')">⭕ 圆形</button>
+            <button class="tool-btn" data-tool="rectangle" onclick="setActiveTool('rectangle')">⬜ 矩形</button>
+            <button class="tool-btn danger" onclick="clearAll()">🗑️ 清除</button>
+        </div>
+    
+        <div class="tool-group">
+            <div class="group-title">地图切换</div>
+            <button class="tool-btn" onclick="switchMapType('normal')">🗺️ 标准图</button>
+            <button class="tool-btn" onclick="switchMapType('satellite')">🛰️ 卫星图</button>
+            <button class="tool-btn" onclick="switchMapType('perspective')">⛰️ 地形图</button>
+        </div>
+    
+        <div class="tool-group">
+            <div class="group-title">数据管理</div>
+            <button class="tool-btn" onclick="toggleFeatureTable()">📋 要素表</button>
+            <button class="tool-btn primary" onclick="saveProject()">💾 保存</button>
+            <button class="tool-btn" onclick="loadProject()">📂 打开</button>
+            <button class="tool-btn" id="loginBtn" onclick="checkLoginStatus()">👤 登录</button>
+            <!-- 添加批量导入按钮 -->
+            <button class="tool-btn" onclick="openBatchImportModal()">📥 批量导入</button>
+        </div>
+        
+        <!-- 添加路线规划工具组 -->
+        <div class="tool-group">
+            <div class="group-title">路线规划</div>
+            <button class="tool-btn" onclick="console.log('路线规划按钮被点击'); openRoutePanel();">🚗 路线规划</button>
+        </div>
+    </div>
+
+    <div id="map-container"></div>
+    <!-- 批量导入模态框 -->
+    <div class="modal" id="batchImportModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>批量导入点位</h3>
+                <span class="close-btn" onclick="closeBatchImportModal()">×</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>选择点位类型：</label>
+                    <select id="import-point-type">
+                        <option value="point">通用点</option>
+                        <option value="hydrant">消防栓</option>
+                        <option value="water">水源点</option>
+                        <option value="firetruck">消防车</option>
+                        <option value="firepoint">着火点</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>导入方式：</label>
+                    <div class="import-options">
+                        <label><input type="radio" name="import-method" value="file" checked> 文件导入</label>
+                        <label><input type="radio" name="import-method" value="text"> 文本粘贴</label>
+                    </div>
+                </div>
+                <div id="file-import-section">
+                    <div class="form-group">
+                        <label>选择CSV或文本文件：</label>
+                        <input type="file" id="batch-file-input" accept=".csv,.txt">
+                    </div>
+                </div>
+                <div id="text-import-section" style="display:none;">
+                    <div class="form-group">
+                        <label>粘贴经纬度数据（每行一个点，格式：经度,纬度,名称）：</label>
+                        <textarea id="batch-text-input" rows="10" placeholder="104.123456,30.123456,点位1&#10;104.234567,30.234567,点位2"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>数据格式说明：</label>
+                    <p class="help-text">每行一个点位，格式为：经度,纬度,名称[,属性1,属性2...]</p>
+                    <p class="help-text">例如：104.123456,30.123456,消防栓1,正常</p>
+                </div>
+                <div class="preview-section">
+                    <h4>数据预览 <span id="preview-count">(0条)</span></h4>
+                    <div class="preview-table-container">
+                        <table id="preview-table">
+                            <thead>
+                                <tr>
+                                    <th>经度</th>
+                                    <th>纬度</th>
+                                    <th>名称</th>
+                                    <th>属性</th>
+                                </tr>
+                            </thead>
+                            <tbody id="preview-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary-btn" onclick="previewImportData()">预览数据</button>
+                <button class="btn primary-btn" onclick="importBatchPoints()">导入点位</button>
+                <button class="btn" onclick="closeBatchImportModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="imageInput" style="display: none;" accept="image/*">
+    <input type="file" id="fileInput" style="display: none;" accept=".json">
+
+    <div class="attribute-panel" id="attrPanel">
+        <h3>要素属性 <span onclick="closePanel()" style="float:right;cursor:pointer">×</span></h3>
+        <div class="attr-item">
+            <label>类型：<span id="attr-type"></span></label>
+        </div>
+        <div class="attr-item">
+            <label>名称：<input type="text" id="attr-name"></label>
+        </div>
+        <div class="attr-item">
+            <label>坐标：<span id="attr-coordinates"></span></label>
+        </div>
+        <div id="style-controls" class="attr-item">
+            <label>边线颜色：<input type="color" id="attr-color"></label>
+            <label>填充颜色：<input type="color" id="attr-fill-color"></label>
+            <label>线宽：<input type="number" id="attr-weight" min="1" max="10" value="2"></label>
+            <label>透明度：<input type="range" id="attr-opacity" min="0" max="1" step="0.1" value="1"></label>
+        </div>
+        <div id="special-props">
+            <div class="attr-item" id="hydrant-props" style="display:none;">
+                <label>水压：<input type="text" id="attr-pressure"></label>
+            </div>
+            <div class="attr-item" id="water-props" style="display:none;">
+                <label>容量：<input type="text" id="attr-capacity"></label>
+            </div>
+            <div class="attr-item" id="firetruck-props" style="display:none;">
+                <label>状态：<select id="attr-status">
+                    <option value="待命">待命</option>
+                    <option value="出动中">出动中</option>
+                    <option value="作业中">作业中</option>
+                </select></label>
+                <label>载水量：<input type="text" id="attr-truck-capacity"></label>
+            </div>
+            <div class="attr-item" id="firepoint-props" style="display:none;">
+                <label>火势等级：<select id="attr-fire-level">
+                    <option value="一级">一级</option>
+                    <option value="二级">二级</option>
+                    <option value="三级">三级</option>
+                </select></label>
+                <label>起火时间：<span id="attr-fire-time"></span></label>
+            </div>
+        </div>
+        <div id="route-controls" style="display:none;">
+            <h4>🚒 应急路线规划</h4>
+            <div class="attr-item">
+                <label>起点（消防车ID）: <input type="text" id="route-start-id"></label>
+            </div>
+            <div class="attr-item">
+                <label>终点（火情ID）: <input type="text" id="route-end-id"></label>
+            </div>
+            <button onclick="calculateRoute()" class="tool-btn">生成路线</button>
+            <button onclick="clearRoute()" class="danger-btn">清除路线</button>
+        </div>
+        <button onclick="saveAttributes()" style="margin-top:15px">保存属性</button>
+        <button class="danger-btn" onclick="deleteFeature()">删除要素</button>
+    </div>
+
+    <!-- 要素属性表 -->
+    <div class="feature-table" id="featureTablePanel">
+        <div class="table-header">
+            <h3>要素属性表</h3>
+            <div class="table-controls">
+                <input type="text" id="searchInput" placeholder="搜索要素..." oninput="searchFeatures()">
+                <span class="drag-handle" title="拖动">⋮⋮</span>
+                <span onclick="toggleFeatureTable()" style="cursor:pointer;margin-left:10px" title="关闭">×</span>
+            </div>
+        </div>
+        <table id="featureTable">
+            <thead>
+                <tr>
+                    <th>类型</th>
+                    <th>名称</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody id="featureTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- 脚本引用 -->
+    <script src="js/auth.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/draw.js"></script>
+    <script src="js/style.js"></script>
+    <script src="js/feature.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/query.js"></script>
+    <script src="js/route.js"></script>
+    <script src="js/imageMarker.js"></script>
+    <script src="js/batchImport.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- 移除登录按钮 -->
+    <div class="header">
+        <div class="logo">消防应急专题地图系统</div>
+        <div class="nav-buttons">
+            <!-- 其他按钮保持不变 -->
+        </div>
+    </div>
+    
+    <!-- 移除或注释掉登录模态框 -->
+    <!-- <div class="auth-modal" id="authModal" style="display: none;">
+        <div class="auth-content">
+            <h3>用户登录/注册 <span onclick="toggleAuthModal(false)" style="float:right;cursor:pointer">×</span></h3>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label>用户名：</label>
+                    <input type="text" id="username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label>密码：</label>
+                    <input type="password" id="password" placeholder="请输入密码">
+                </div>
+                <div class="auth-buttons">
+                    <button onclick="handleLogin()" class="primary-btn">登录</button>
+                    <button onclick="handleRegister()" class="secondary-btn">注册</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- 路线规划面板 -->
+        <div id="route-panel" class="panel" style="display:none;">
+            <div class="panel-header">
+                <h3>路线规划</h3>
+                <div class="panel-controls">
+                    <span class="drag-handle" title="拖动">⋮⋮</span>
+                    <button class="close-btn" onclick="document.getElementById('route-panel').style.display='none'">×</button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label>起点（消防车）</label>
+                    <select id="route-start">
+                        <option value="">请选择消防车</option>
+                        <!-- 将通过JavaScript动态填充 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>终点（着火点）</label>
+                    <select id="route-end">
+                        <option value="">请选择终点</option>
+                        <!-- 将通过JavaScript动态填充 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>路线策略</label>
+                    <select id="route-policy" class="form-control">
+                        <option value="distance">最短距离</option>
+                    </select>
+                </div>
+                <button class="btn primary-btn" onclick="calculateRouteFromUI()">计算路线</button>
+                <button class="btn danger-btn" onclick="RouteManager.clearRoute()">清除路线</button>
+            </div>
+        </div>

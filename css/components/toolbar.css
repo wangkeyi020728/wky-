@@ -1,0 +1,121 @@
+.toolbar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 10px 20px;
+    z-index: 1000;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.tool-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-right: 20px;
+    border-right: 1px solid #eee;
+}
+
+.tool-group:last-child {
+    border-right: none;
+    margin-left: auto;
+}
+
+.group-title {
+    font-size: 12px;
+    color: #666;
+    margin-right: 8px;
+}
+
+.tool-btn {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.tool-btn:hover {
+    background: #f5f5f5;
+    border-color: #d0d0d0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tool-btn.active {
+    background: #e6f7ff;
+    border-color: #1890ff;
+    color: #1890ff;
+}
+
+.tool-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.tool-btn img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+/* 工具栏分组标题 */
+.group-title {
+    font-size: 12px;
+    color: #666;
+    margin: 8px 0 4px;
+    padding-left: 4px;
+}
+
+/* 特殊按钮样式 */
+.tool-btn.danger {
+    color: #ff4d4f;
+    border-color: #ffa39e;
+}
+
+.tool-btn.danger:hover {
+    background: #fff1f0;
+    border-color: #ff4d4f;
+}
+
+.tool-btn.primary {
+    background: #1890ff;
+    border-color: #1890ff;
+    color: white;
+}
+
+.tool-btn.primary:hover {
+    background: #40a9ff;
+    border-color: #40a9ff;
+}
+
+
+/* 如果有冲突的样式，请删除或修改它们 */
+/* 例如，如果有类似这样的样式： */
+
+.toolbar {
+    /* 这些样式可能会影响侧边栏 */
+    /* 确保它们只应用于原始工具栏 */
+}
+
+/* 确保工具组在侧边栏中正确显示 */
+.sidebar .tool-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* 确保按钮在侧边栏中正确显示 */
+.sidebar .tool-btn {
+    margin: 5px 0;
+}
